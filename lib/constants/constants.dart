@@ -4,3 +4,9 @@ enum CPConnectionStatusTypes {
   disconnected,
   unknown,
 }
+
+/// The style of the trip estimate
+enum CPTripEstimateStyle {
+  light,
+  dark,
+}

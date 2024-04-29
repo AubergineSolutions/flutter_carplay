@@ -12,10 +12,10 @@ class FlutterCarPlayController {
   static final EventChannel _eventChannel =
       EventChannel(_carplayHelper.makeFCPChannelId(event: "/event"));
 
-  /// [CPTabBarTemplate], [CPGridTemplate], [CPListTemplate], [CPIInformationTemplate], [CPPointOfInterestTemplate] in a List
+  /// [CPTabBarTemplate], [CPGridTemplate], [CPListTemplate], [CPIInformationTemplate], [CPPointOfInterestTemplate], [CPMapTemplate] in a List
   static List<dynamic> templateHistory = [];
 
-  /// [CPTabBarTemplate], [CPGridTemplate], [CPListTemplate], [CPIInformationTemplate], [CPPointOfInterestTemplate]
+  /// [CPTabBarTemplate], [CPGridTemplate], [CPListTemplate], [CPIInformationTemplate], [CPPointOfInterestTemplate], [CPMapTemplate]
   static dynamic currentRootTemplate;
 
   /// [CPAlertTemplate], [CPActionSheetTemplate]
@@ -81,7 +81,8 @@ class FlutterCarPlayController {
         template.runtimeType == CPGridTemplate ||
         template.runtimeType == CPInformationTemplate ||
         template.runtimeType == CPPointOfInterestTemplate ||
-        template.runtimeType == CPListTemplate) {
+        template.runtimeType == CPListTemplate ||
+        template.runtimeType == CPMapTemplate) {
       templateHistory.add(template);
     } else {
       throw TypeError();
@@ -139,6 +140,19 @@ class FlutterCarPlayController {
       if (t.runtimeType.toString() == "CPListTemplate") {
         barButton = t.backButton;
         break l1;
+      } else if (t.runtimeType.toString() == "CPMapTemplate") {
+        final barButtons =
+            t.leadingNavigationBarButtons + t.trailingNavigationBarButtons;
+
+        if (t.backButton != null) {
+          barButtons.add(t.backButton);
+        }
+        for (CPBarButton b in barButtons) {
+          if (b.uniqueId == elementId) {
+            barButton = b;
+            break l1;
+          }
+        }
       }
     }
     if (barButton != null) barButton.onPress();
@@ -168,6 +182,20 @@ class FlutterCarPlayController {
               b.onPress();
               break l2;
             }
+          }
+        }
+      }
+    }
+  }
+
+  void processFCPMapButtonPressed(String elementId) {
+    l1:
+    for (var t in templateHistory) {
+      if (t.runtimeType.toString() == "CPMapTemplate") {
+        for (CPMapButton b in t.mapButtons) {
+          if (b.uniqueId == elementId) {
+            b.onPress();
+            break l1;
           }
         }
       }

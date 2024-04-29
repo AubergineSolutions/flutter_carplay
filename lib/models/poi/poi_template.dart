@@ -1,4 +1,5 @@
 import 'package:uuid/uuid.dart';
+
 import 'poi.dart';
 
 /// A template object that displays point of interest.

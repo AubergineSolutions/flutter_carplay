@@ -79,6 +79,10 @@ class FlutterCarplay {
           _carPlayController
               .processFCPTextButtonPressed(event["data"]["elementId"]);
           break;
+        case FCPChannelTypes.onMapButtonPressed:
+          _carPlayController
+              .processFCPMapButtonPressed(event["data"]["elementId"]);
+          break;
         default:
           break;
       }
@@ -145,7 +149,8 @@ class FlutterCarplay {
         rootTemplate.runtimeType == CPGridTemplate ||
         rootTemplate.runtimeType == CPListTemplate ||
         rootTemplate.runtimeType == CPInformationTemplate ||
-        rootTemplate.runtimeType == CPPointOfInterestTemplate) {
+        rootTemplate.runtimeType == CPPointOfInterestTemplate ||
+        rootTemplate.runtimeType == CPMapTemplate) {
       _carPlayController.methodChannel
           .invokeMethod('setRootTemplate', <String, dynamic>{
         'rootTemplate': rootTemplate.toJson(),

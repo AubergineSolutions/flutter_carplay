@@ -10,12 +10,20 @@ import CarPlay
 @available(iOS 14.0, *)
 class FlutterCarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate {
     private static var interfaceController: CPInterfaceController?
+    private static var carWindow: UIWindow?
 
     public static func forceUpdateRootTemplate(completion: ((Bool, (any Error)?) -> Void)? = nil) {
         let rootTemplate = SwiftFlutterCarplayPlugin.rootTemplate
         let animated = SwiftFlutterCarplayPlugin.animated
 
         interfaceController?.setRootTemplate(rootTemplate!, animated: animated, completion: completion)
+
+        // Set root view controller if rootTemplate is CPMapTemplate
+        if rootTemplate is CPMapTemplate, let mapViewController = SwiftFlutterCarplayPlugin.objcMapViewController {
+            FlutterCarPlaySceneDelegate.carWindow?.rootViewController = mapViewController
+        } else {
+            FlutterCarPlaySceneDelegate.carWindow?.rootViewController = nil
+        }
     }
 
     // Fired when just before the carplay become active
@@ -57,9 +65,13 @@ class FlutterCarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelega
     }
 
     func templateApplicationScene(_: CPTemplateApplicationScene,
-                                  didConnect interfaceController: CPInterfaceController)
+                                  didConnect interfaceController: CPInterfaceController, to window: CPWindow)
     {
         FlutterCarPlaySceneDelegate.interfaceController = interfaceController
+        FlutterCarPlaySceneDelegate.carWindow = window
+
+        FlutterCarPlaySceneDelegate.carWindow?.isUserInteractionEnabled = true
+        FlutterCarPlaySceneDelegate.carWindow?.isMultipleTouchEnabled = true
 
         SwiftFlutterCarplayPlugin.onCarplayConnectionChange(status: FCPConnectionTypes.connected)
         let rootTemplate = SwiftFlutterCarplayPlugin.rootTemplate
@@ -67,6 +79,13 @@ class FlutterCarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelega
         guard rootTemplate != nil else {
             FlutterCarPlaySceneDelegate.interfaceController = nil
             return
+        }
+
+        // Set root view controller if rootTemplate is CPMapTemplate
+        if rootTemplate is CPMapTemplate, let mapViewController = SwiftFlutterCarplayPlugin.objcMapViewController {
+            FlutterCarPlaySceneDelegate.carWindow?.rootViewController = mapViewController
+        } else {
+            FlutterCarPlaySceneDelegate.carWindow?.rootViewController = nil
         }
 
         FlutterCarPlaySceneDelegate.interfaceController?.setRootTemplate(rootTemplate!, animated: SwiftFlutterCarplayPlugin.animated, completion: nil)

@@ -14,6 +14,8 @@ public class SwiftFlutterCarplayPlugin: NSObject, FlutterPlugin {
     private(set) static var registrar: FlutterPluginRegistrar?
     private static var objcRootTemplate: FCPRootTemplate?
     private static var _rootTemplate: CPTemplate?
+    private static var _objcMapViewController: FCPMapViewController?
+
     public static var animated: Bool = false
     private var objcPresentTemplate: FCPPresentTemplate?
 
@@ -23,6 +25,15 @@ public class SwiftFlutterCarplayPlugin: NSObject, FlutterPlugin {
         }
         set(tabBarTemplate) {
             _rootTemplate = tabBarTemplate
+        }
+    }
+
+    static var objcMapViewController: FCPMapViewController? {
+        get {
+            return _objcMapViewController
+        }
+        set(viewController) {
+            _objcMapViewController = viewController
         }
     }
 
@@ -66,6 +77,10 @@ public class SwiftFlutterCarplayPlugin: NSObject, FlutterPlugin {
             case String(describing: FCPListTemplate.self):
                 rootTemplate = FCPListTemplate(obj: args["rootTemplate"] as! [String: Any], templateType: FCPListTemplateTypes.DEFAULT)
                 SwiftFlutterCarplayPlugin.rootTemplate = (rootTemplate as! FCPListTemplate).get
+            case String(describing: FCPMapTemplate.self):
+                rootTemplate = FCPMapTemplate(obj: args["rootTemplate"] as! [String: Any])
+                SwiftFlutterCarplayPlugin.rootTemplate = (rootTemplate as! FCPMapTemplate).get
+                SwiftFlutterCarplayPlugin.objcMapViewController = (rootTemplate as! FCPMapTemplate).objcMapViewController
             default:
                 result(false)
                 return
@@ -170,7 +185,6 @@ public class SwiftFlutterCarplayPlugin: NSObject, FlutterPlugin {
                 pushTemplate = FCPPointOfInterestTemplate(obj: args["template"] as! [String: Any]).get
             case String(describing: FCPInformationTemplate.self):
                 pushTemplate = FCPInformationTemplate(obj: args["template"] as! [String: Any]).get
-
             case String(describing: FCPListTemplate.self):
                 pushTemplate = FCPListTemplate(obj: args["template"] as! [String: Any], templateType: FCPListTemplateTypes.DEFAULT).get
             default:

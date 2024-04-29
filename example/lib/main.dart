@@ -24,6 +24,18 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
 
+    setMapTemplate();
+
+    _flutterCarplay.addListenerOnConnectionChange(onCarplayConnectionChange);
+  }
+
+  @override
+  void dispose() {
+    _flutterCarplay.removeListenerOnConnectionChange();
+    super.dispose();
+  }
+
+  void setTabBarTemplate() {
     final List<CPListSection> section1Items = [];
     section1Items.add(CPListSection(
       items: [
@@ -166,14 +178,57 @@ class _MyAppState extends State<MyApp> {
       ),
       animated: true,
     );
-
-    _flutterCarplay.addListenerOnConnectionChange(onCarplayConnectionChange);
+    _flutterCarplay.forceUpdateRootTemplate();
   }
 
-  @override
-  void dispose() {
-    _flutterCarplay.removeListenerOnConnectionChange();
-    super.dispose();
+  void setMapTemplate() {
+    FlutterCarplay.setRootTemplate(
+      rootTemplate: CPMapTemplate(
+        mapButtons: [
+          CPMapButton(
+              image: "images/logo_flutter_1080px_clr.png",
+              onPress: () {
+                print("Map button 1 pressed");
+              }),
+          CPMapButton(
+              image: "images/logo_flutter_1080px_clr.png",
+              onPress: () {
+                print("Map button 2 pressed");
+              }),
+          CPMapButton(
+              image: "images/logo_flutter_1080px_clr.png",
+              onPress: () {
+                print("Map button 3 pressed");
+              }),
+          CPMapButton(
+              image: "images/logo_flutter_1080px_clr.png",
+              onPress: () {
+                print("Map button 4 pressed");
+              })
+        ],
+        leadingNavigationBarButtons: [
+          CPBarButton(
+            title: "Btn1",
+            onPress: () => print("Leading button 1 pressed"),
+          ),
+          CPBarButton(
+            title: "Btn2",
+            onPress: () => print("Leading button 2 pressed"),
+          )
+        ],
+        trailingNavigationBarButtons: [
+          CPBarButton(
+            title: "Btn1",
+            onPress: () => print("Trailing button 1 pressed"),
+          ),
+          CPBarButton(
+            title: "Btn2",
+            onPress: () => print("Trailing button 2 pressed"),
+          )
+        ],
+      ),
+    );
+    _flutterCarplay.forceUpdateRootTemplate();
   }
 
   void onCarplayConnectionChange(CPConnectionStatusTypes status) {
@@ -550,6 +605,34 @@ class _MyAppState extends State<MyApp> {
                   ),
                   onPressed: () => openGridTemplate(),
                   child: const Text('Open Grid\nTemplate'),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    textStyle: const TextStyle(fontSize: 15),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 12,
+                      horizontal: 24,
+                    ),
+                  ),
+                  onPressed: () => setMapTemplate(),
+                  child: const Text('Set Map\nTemplate'),
+                ),
+                const SizedBox(width: 20, height: 0),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    textStyle: const TextStyle(fontSize: 15),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 12,
+                      horizontal: 24,
+                    ),
+                  ),
+                  onPressed: () => setTabBarTemplate(),
+                  child: const Text('Set TabBar\nTemplate'),
                 ),
               ],
             ),
