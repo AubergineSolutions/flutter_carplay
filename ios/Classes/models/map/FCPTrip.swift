@@ -6,7 +6,6 @@
 // Copyright © 2024 Aubergine Solutions Pvt. Ltd. All rights reserved.
 //
 
-import Foundation
 import CarPlay
 
 @available(iOS 14.0, *)
@@ -25,10 +24,26 @@ class FCPTrip {
             FCPRouteChoice(obj: $0).get
         }
     }
-    
+
     var get: CPTrip {
         let trip = CPTrip(origin: origin, destination: destination, routeChoices: routeChoices)
         _super = trip
         return trip
+    }
+
+    func getOrigin() -> MKMapItem {
+        return origin
+    }
+
+    func getDestination() -> MKMapItem {
+        return destination
+    }
+
+    func getOriginCoordinate() -> CLLocationCoordinate2D {
+        return origin.placemark.coordinate
+    }
+
+    func getDestinationCoordinate() -> CLLocationCoordinate2D {
+        return origin.placemark.coordinate
     }
 }

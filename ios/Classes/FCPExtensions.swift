@@ -13,9 +13,28 @@ extension UIImage {
 
     @available(iOS 14.0, *)
     func fromFlutterAsset(name: String) -> UIImage {
-        let key: String? = SwiftFlutterCarplayPlugin.registrar?.lookupKey(forAsset: name)
-        let image: UIImage? = UIImage(imageLiteralResourceName: key!)
-        return image ?? UIImage(systemName: "questionmark")!
+        guard let registrar = SwiftFlutterCarplayPlugin.registrar,
+              let fileName = URL(string: name)?.lastPathComponent else {
+            return UIImage(systemName: "questionmark")!
+        }
+        
+        let imageAsset = UIImage().imageAsset
+        
+        // Register images for different scales
+        for scale in [1, 2, 3] {
+            let scaleSuffix = scale > 1 ? "\(scale)x/" : ""
+            let imageName = name.replacingOccurrences(of: "\(fileName)", with: "\(scaleSuffix)\(fileName)")
+            let key = registrar.lookupKey(forAsset: imageName)
+            
+            if let image = UIImage(named: key) {
+                let config = UITraitCollection(displayScale: CGFloat(scale))
+                imageAsset?.register(image, with: config)
+            }
+        }
+        
+        // Get the image for the current display scale
+        let currentScale = UIScreen.main.scale
+        return imageAsset?.image(with: UITraitCollection(displayScale: currentScale)) ?? UIImage(systemName: "questionmark")!
     }
 
     func resizeImageTo(size: CGSize) -> UIImage? {

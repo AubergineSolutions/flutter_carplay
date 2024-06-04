@@ -19,6 +19,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   CPConnectionStatusTypes connectionStatus = CPConnectionStatusTypes.unknown;
   final FlutterCarplay _flutterCarplay = FlutterCarplay();
+  late CPMapTemplate mapTemplate;
 
   @override
   void initState() {
@@ -181,54 +182,99 @@ class _MyAppState extends State<MyApp> {
     _flutterCarplay.forceUpdateRootTemplate();
   }
 
-  void setMapTemplate() {
-    FlutterCarplay.setRootTemplate(
-      rootTemplate: CPMapTemplate(
-        mapButtons: [
-          CPMapButton(
-              image: "images/logo_flutter_1080px_clr.png",
-              onPress: () {
-                print("Map button 1 pressed");
-              }),
-          CPMapButton(
-              image: "images/logo_flutter_1080px_clr.png",
-              onPress: () {
-                print("Map button 2 pressed");
-              }),
-          CPMapButton(
-              image: "images/logo_flutter_1080px_clr.png",
-              onPress: () {
-                print("Map button 3 pressed");
-              }),
-          CPMapButton(
-              image: "images/logo_flutter_1080px_clr.png",
-              onPress: () {
-                print("Map button 4 pressed");
-              })
-        ],
-        leadingNavigationBarButtons: [
-          CPBarButton(
-            title: "Btn1",
-            onPress: () => print("Leading button 1 pressed"),
-          ),
-          CPBarButton(
-            title: "Btn2",
-            onPress: () => print("Leading button 2 pressed"),
-          )
-        ],
-        trailingNavigationBarButtons: [
-          CPBarButton(
-            title: "Btn1",
-            onPress: () => print("Trailing button 1 pressed"),
-          ),
-          CPBarButton(
-            title: "Btn2",
-            onPress: () => print("Trailing button 2 pressed"),
-          )
-        ],
-      ),
+  Future<void> setMapTemplate() async {
+    mapTemplate = CPMapTemplate(
+      mapButtons: [
+        CPMapButton(
+            image: "images/center.png",
+            onPress: () {
+              mapTemplate.moveToCurrentLocation(true);
+            }),
+        CPMapButton(
+            image: "images/zoom_in.png",
+            onPress: () {
+              mapTemplate.zoomIn(true);
+            }),
+        CPMapButton(
+            image: "images/zoom_out.png",
+            onPress: () {
+              mapTemplate.zoomOut(true);
+            }),
+      ],
+      leadingNavigationBarButtons: [
+        CPBarButton(
+          image: "images/move.png",
+          style: CPBarButtonStyles.none,
+          onPress: () {
+            print("Leading button 1 pressed");
+            showPanningInterfaceOnMapTemplate();
+          },
+        ),
+      ],
+      trailingNavigationBarButtons: [
+        CPBarButton(
+          title: "Route",
+          style: CPBarButtonStyles.none,
+          onPress: () => showTripPreviewOnMapTemplate(),
+        ),
+      ],
     );
+
+    FlutterCarplay.setRootTemplate(rootTemplate: mapTemplate);
     _flutterCarplay.forceUpdateRootTemplate();
+  }
+
+  void showPanningInterfaceOnMapTemplate() {
+    mapTemplate.showPanningInterface(true);
+    mapTemplate.setLeadingNavigationBarButtons([
+      CPBarButton(
+          image: "images/move.png",
+          style: CPBarButtonStyles.none,
+          onPress: () => dismissPanningInterfaceOnMapTemplate())
+    ]);
+  }
+
+  void dismissPanningInterfaceOnMapTemplate() {
+    mapTemplate.dismissPanningInterface(true);
+    mapTemplate.setLeadingNavigationBarButtons([
+      CPBarButton(
+          image: "images/move.png",
+          style: CPBarButtonStyles.none,
+          onPress: () => showPanningInterfaceOnMapTemplate())
+    ]);
+
+    final image = Image.asset('assets/your_image.png');
+  }
+
+  void showTripPreviewOnMapTemplate() {
+    final origin = MKMapItem(
+        latitude: 22.995349835710666,
+        longitude: 72.66001778969749,
+        name: 'JIVAN RESIDENCY');
+    final destination = MKMapItem(
+        latitude: 23.010188091503895,
+        longitude: 72.5060371787926,
+        name: 'Aubergine Solutions Pvt. Ltd.');
+
+    final routeChoices = CPRouteChoice(additionalInformationVariants: [
+      'B3/First Floor, Safal Profitaire, Corporate Rd, Prahlad Nagar, Ahmedabad, Gujarat 380015'
+    ]);
+    final textConfiguration = CPTripPreviewTextConfiguration(
+        startButtonTitle: 'Start Navigation',
+        additionalRoutesButtonTitle: 'Additional Routes',
+        overviewButtonTitle: 'Overview');
+
+    final selectedTrip = CPTrip(
+      origin: origin,
+      destination: destination,
+      routeChoices: [routeChoices],
+    );
+
+    mapTemplate.showTripPreviews(
+      [selectedTrip],
+      selectedTrip,
+      textConfiguration,
+    );
   }
 
   void onCarplayConnectionChange(CPConnectionStatusTypes status) {

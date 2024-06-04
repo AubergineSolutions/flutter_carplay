@@ -6,7 +6,6 @@
 // Copyright © 2024 Aubergine Solutions Pvt. Ltd. All rights reserved.
 //
 
-import Foundation
 import CarPlay
 
 @available(iOS 14.0, *)
@@ -23,7 +22,7 @@ class FCPRouteChoice {
         selectionSummaryVariants = obj["selectionSummaryVariants"] as? [String] ?? []
         additionalInformationVariants = obj["additionalInformationVariants"] as? [String] ?? []
     }
-    
+
     var get: CPRouteChoice {
         let routeChoice = CPRouteChoice(summaryVariants: summaryVariants, additionalInformationVariants: additionalInformationVariants, selectionSummaryVariants: selectionSummaryVariants)
         _super = routeChoice

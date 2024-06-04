@@ -16,6 +16,7 @@ enum FCPChannelTypes {
     static let setRootTemplate = "setRootTemplate"
     static let forceUpdateRootTemplate = "forceUpdateRootTemplate"
     static let updateListItem = "updateListItem"
+    static let updateMapTemplate = "updateMapTemplate"
     static let onListItemSelected = "onFCPListItemSelected"
     static let onListItemSelectedComplete = "onFCPListItemSelectedComplete"
     static let onAlertActionPressed = "onFCPAlertActionPressed"
@@ -30,6 +31,13 @@ enum FCPChannelTypes {
     static let onTextButtonPressed = "onTextButtonPressed"
     static let onMapButtonPressed = "onMapButtonPressed"
     static let popToRootTemplate = "popToRootTemplate"
+    static let showTripPreviews = "showTripPreviews"
+    static let hideTripPreviews = "hideTripPreviews"
+    static let showPanningInterface = "showPanningInterface"
+    static let dismissPanningInterface = "dismissPanningInterface"
+    static let zoomInMapView = "zoomInMapView"
+    static let zoomOutMapView = "zoomOutMapView"
+    static let moveToCurrentLocation = "moveToCurrentLocation"
 }
 
 enum FCPAlertActionTypes {
@@ -41,3 +49,5 @@ enum FCPListTemplateTypes {
     case PART_OF_GRID_TEMPLATE
     case DEFAULT
 }
+
+enum FCPTripEstimateStyle {}

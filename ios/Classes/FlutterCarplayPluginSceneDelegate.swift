@@ -12,6 +12,10 @@ class FlutterCarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelega
     private static var interfaceController: CPInterfaceController?
     private static var carWindow: UIWindow?
 
+    public static func getCarWindow() -> UIWindow? {
+        return carWindow
+    }
+
     public static func forceUpdateRootTemplate(completion: ((Bool, (any Error)?) -> Void)? = nil) {
         let rootTemplate = SwiftFlutterCarplayPlugin.rootTemplate
         let animated = SwiftFlutterCarplayPlugin.animated

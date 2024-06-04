@@ -7,10 +7,9 @@
 //
 
 import CarPlay
-import Foundation
 
 @available(iOS 14.0, *)
-class FCPMapButton: NSObject {
+class FCPMapButton {
     private(set) var _super: CPMapButton?
     private(set) var elementId: String
     private var isEnabled: Bool

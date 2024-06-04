@@ -76,6 +76,103 @@ class FlutterCarPlayController {
     });
   }
 
+  static void updateMapTemplate(CPMapTemplate updatedMapTemplate) {
+    _methodChannel.invokeMethod('updateMapTemplate',
+        <String, dynamic>{...updatedMapTemplate.toJson()}).then((value) {
+      if (value) {
+        for (var h in templateHistory) {
+          switch (h.runtimeType) {
+            case CPTabBarTemplate:
+              for (var t in (h as CPTabBarTemplate).templates) {
+                if (t.uniqueId == updatedMapTemplate.uniqueId) {
+                  currentRootTemplate = updatedMapTemplate;
+                  break;
+                }
+              }
+              break;
+            case CPMapTemplate:
+              if (h.uniqueId == updatedMapTemplate.uniqueId) {
+                currentRootTemplate = updatedMapTemplate;
+                break;
+              }
+              break;
+            default:
+          }
+        }
+      }
+    });
+  }
+
+  static void showTripPreviews(
+    String elementId,
+    List<CPTrip> tripPreviews,
+    CPTrip? selectedTrip,
+    CPTripPreviewTextConfiguration? textConfiguration,
+  ) {
+    _methodChannel.invokeMethod(
+        CPEnumUtils.stringFromEnum(FCPChannelTypes.showTripPreviews.toString()),
+        {
+          '_elementId': elementId,
+          'tripPreviews': tripPreviews.map((e) => e.toJson()).toList(),
+          'selectedTrip': selectedTrip?.toJson(),
+          'textConfiguration': textConfiguration?.toJson(),
+        });
+  }
+
+  static void hideTripPreviews(String elementId) {
+    _methodChannel.invokeMethod(
+        CPEnumUtils.stringFromEnum(FCPChannelTypes.hideTripPreviews.toString()),
+        {
+          '_elementId': elementId,
+        });
+  }
+
+  static void showPanningInterface(String elementId, bool animated) {
+    _methodChannel.invokeMethod(
+        CPEnumUtils.stringFromEnum(
+            FCPChannelTypes.showPanningInterface.toString()),
+        {
+          '_elementId': elementId,
+          'animated': animated,
+        });
+  }
+
+  static void dismissPanningInterface(String elementId, bool animated) {
+    _methodChannel.invokeMethod(
+        CPEnumUtils.stringFromEnum(
+            FCPChannelTypes.dismissPanningInterface.toString()),
+        {
+          '_elementId': elementId,
+          'animated': animated,
+        });
+  }
+
+  static void zoomInMapView(String elementId, bool animated) {
+    _methodChannel.invokeMethod(
+        CPEnumUtils.stringFromEnum(FCPChannelTypes.zoomInMapView.toString()), {
+      '_elementId': elementId,
+      'animated': animated,
+    });
+  }
+
+  static void zoomOutMapView(String elementId, bool animated) {
+    _methodChannel.invokeMethod(
+        CPEnumUtils.stringFromEnum(FCPChannelTypes.zoomOutMapView.toString()), {
+      '_elementId': elementId,
+      'animated': animated,
+    });
+  }
+
+  static void moveToCurrentLocation(String elementId, bool animated) {
+    _methodChannel.invokeMethod(
+        CPEnumUtils.stringFromEnum(
+            FCPChannelTypes.moveToCurrentLocation.toString()),
+        {
+          '_elementId': elementId,
+          'animated': animated,
+        });
+  }
+
   void addTemplateToHistory(dynamic template) {
     if (template.runtimeType == CPTabBarTemplate ||
         template.runtimeType == CPGridTemplate ||

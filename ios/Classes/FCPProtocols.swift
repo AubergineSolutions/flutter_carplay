@@ -8,3 +8,7 @@
 protocol FCPPresentTemplate {}
 
 protocol FCPRootTemplate {}
+
+protocol ElementIdentifiable {
+    var elementId: String { get }
+}

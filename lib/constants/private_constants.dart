@@ -17,4 +17,11 @@ enum FCPChannelTypes {
   onTextButtonPressed,
   onMapButtonPressed,
   popToRootTemplate,
+  showTripPreviews,
+  hideTripPreviews,
+  showPanningInterface,
+  dismissPanningInterface,
+  zoomInMapView,
+  zoomOutMapView,
+  moveToCurrentLocation,
 }

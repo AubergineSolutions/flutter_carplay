@@ -16,7 +16,11 @@ class CPTrip {
   final List<CPRouteChoice> routeChoices;
 
   /// Creates a new [CPTrip] object.
-  CPTrip(this.origin, this.destination, this.routeChoices);
+  CPTrip({
+    required this.origin,
+    required this.destination,
+    required this.routeChoices,
+  });
 
   /// Converts the CPTrip object to a JSON object.
   Map<String, dynamic> toJson() => {

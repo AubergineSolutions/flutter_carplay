@@ -6,9 +6,8 @@
 // Copyright © 2024 Aubergine Solutions Pvt. Ltd. All rights reserved.
 //
 
-import Foundation
-import MapKit
 import CoreLocation
+import MapKit
 
 @available(iOS 14.0, *)
 class FMKMapItem {
@@ -17,14 +16,14 @@ class FMKMapItem {
     private var latitude: Double
     private var longitude: Double
     private var name: String
-    
+
     init(obj: [String: Any]) {
         elementId = obj["_elementId"] as! String
         latitude = obj["latitude"] as! Double
         longitude = obj["longitude"] as! Double
         name = obj["name"] as! String
     }
-    
+
     var get: MKMapItem {
         let mapItem = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: latitude, longitude: longitude)))
         mapItem.name = name
